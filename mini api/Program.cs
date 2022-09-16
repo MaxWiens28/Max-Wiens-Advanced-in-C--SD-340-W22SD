@@ -1,65 +1,53 @@
-using Microsoft.EntityFrameworkCore;
-using System.Collections;
-using System.Collections.Generic;
+LinkedList<string> names = new LinkedList<string>();
+LinkedList<int> ages = new LinkedList<int>();
 
-var builder = WebApplication.CreateBuilder(args);
-builder.Services.AddDbContext<TransitDb>(opt => opt.UseInMemoryDatabase());
-builder.Services.AddDatabaseDeveloperPageExceptionFilter();
-var app = builder.Build();
+names.addNode("Max");
+names.addNode("Zac");
+names.addNode("Chris");
 
-app.MapGet("/Route/{id}", async (int id, TransitDb db) =>
-    await db.Transits.FindAsync(id)
+ages.addNode(1);
+ages.addNode(2);
+ages.addNode(3);
 
+names.printData();
+ages.printData();
 
-app.Run();
-
-class Transit
+class LinkedList<T>
 {
-    enum Direction
-    {
-        North,
-        South,
-        East,
-        West,
-        Northeast,
-        Northwest,
-        Southeast,
-        Southwest
-    };
+    public T type { get; set; }
 
-    class Route
+    Node head;
+
+    public LinkedList()
     {
-        public int Number { get; set; }
-        public string Name { get; set; }
-        public Direction Direction { get; set; }
-        public bool RampAccessible { get; set; }
-        public bool BicycleAccessible { get; set; }
-        public Queue StopSchedule { get; set; }
-        public string Hell0 { get; set; }
+        head = null;
     }
 
-    class Stop
+    public void addNode(T newData)
     {
-        public int Number { get; set; }
-        public string Street { get; set; }
-        public string Name { get; set; }
-        public Direction Direction { get; set; }
-        public List<ScheduledStop> StopSchedules = new List<ScheduledStop>();
+        Node newNode = new Node(newData);
+        newNode.next = head;
+        head = newNode;
     }
 
-    class ScheduledStop
+    public void printData()
     {
-        public int Id { get; set; }
-        public Stop Stop { get; set; }
-        public Route Route { get; set; }
-        public DateTime ScheduledArrival { get; set; }
+        Node currentData = head;
+        while (currentData != null)
+        {
+            Console.WriteLine(currentData.data);
+            currentData = currentData.next;
+        }
     }
-}
+    class Node
+    {
+        public T data { get; set; }
+        public Node next { get; set; }
 
-class TransitDb : DbContext
-{
-    public TransitDb(DbContextOptions<TransitDb> options)
-        : base(options) { }
-
-    public DbSet<Transit> Transits => Set<Transit>();
+        public Node(T Data)
+        {
+            data = Data;
+            next = null;
+        }
+    }
 }
