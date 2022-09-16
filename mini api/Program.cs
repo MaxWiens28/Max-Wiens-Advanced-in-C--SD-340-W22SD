@@ -35,6 +35,7 @@ class Transit
         public bool RampAccessible { get; set; }
         public bool BicycleAccessible { get; set; }
         public Queue StopSchedule { get; set; }
+        public string Hell0 { get; set; }
     }
 
     class Stop
